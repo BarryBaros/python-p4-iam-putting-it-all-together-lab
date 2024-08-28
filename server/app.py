@@ -37,18 +37,17 @@ class Signup(Resource):
 
             # Return json response
             response = {
-                'id': new_user.username,
+                'id': new_user.id,
                 'username': new_user.username,
                 'image_url': new_user.image_url,
                 'bio': new_user.bio
             }
             return response, 201
         
-        except IntegrityError as e:
-            db.session.rollback()
-            return {'error': 'A user with that username already exixsts.'}, 422
         except Exception as e:
-            return {'error': str(e)}, 500
+            app.logger.error(f"Exception during signup: {str(e)}")
+            return {'error': 'Internal server error.'}, 500
+
 
 
 class CheckSession(Resource):
